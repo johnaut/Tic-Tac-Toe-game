@@ -22,14 +22,12 @@ void setup() {
       board[i][j] = new Button1(w * i, h * j, w, h);
     }
   }
-  
-   player1 = (Math.random() <= 0.5) ? 1 : 2; 
-   
+
+   player1 = (Math.random() <= 0.5) ? 1 : 2;
+
    if(player1 == 2){
      computerMove();
    }
-   
-    //<>//
 }
 
 void draw() {
@@ -39,18 +37,14 @@ void draw() {
       board[i][j].display();
     }
   }
-  
-    
+
+
 }
 
 void mousePressed()
 {
-
-  
   if(game == 1){
     if(win == 0){
-      
-      
       for(int i = 0; i < cols; i++){
         for(int j = 0; j < rows; j++){
           if(board[i][j].isInside(mouseX,mouseY)){
@@ -58,35 +52,32 @@ void mousePressed()
                 if(player1 == 1){
                   board[i][j].state = 1;
                   board[i][j].label = 'X';
-                  
               }else{
                 board[i][j].state = 1;
                 board[i][j].label = 'O';
           }
-          
           turns++;
-              
         }
-      } 
+      }
     }
   }
-  
+
   if(turns < 5){
      computerMove();
   }
-  
-  
-  
-  
+
+
+
+
 }
   }
 }
 
 
 void computerMove(){
-  
+
   boolean cont = true;
-  
+
   do{
   Random ri = new Random();
   int low = 0;
@@ -94,7 +85,7 @@ void computerMove(){
   int i = ri.nextInt(high-low) + low;
   Random rj = new Random();
   int j = rj.nextInt(high-low) + low;
-  
+
   if(board[i][j].isAvailable()){
     board[i][j].state = 1;
     if(player1 == 1){
@@ -104,17 +95,6 @@ void computerMove(){
   }
    cont = false;
   }
-  
+
   }while(cont);
-  
-  
-  
-  
-
-  
 }
-
-/*if(board[i][j].isPressed() == true)
-{
-  ellipse(mouseX + board[i][j].Width/2, mouseY + board[i][j].Height/2, board[i][j].Width, board[i][j].Height);
-}*/

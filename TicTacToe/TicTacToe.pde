@@ -1,4 +1,5 @@
 import java.util.Random;
+import javax.swing.JOptionPane;
 Button1[][] board;
 
 int cols = 3;
@@ -58,14 +59,13 @@ void mousePressed()
             }
           }
         }
-      }   
+      }
         if(turns < 5){
           computerMove();
         }
     }
  }
 }
-
 
 void computerMove(){
 
@@ -82,12 +82,22 @@ void computerMove(){
   if(board[i][j].isAvailable()){
     board[i][j].state = 1;
     if(player1 == 1){
-       board[i][j].label = 'O';
+      board[i][j].label = 'O';
   }else{
       board[i][j].label = 'X';
   }
    cont = false;
   }
-
   }while(cont);
+}
+
+void displayWinner(){
+  if(player1 == win){
+      String winner = JOptionPane.showInputDialog("YOU WIN!");
+  }
+  else{
+      String loser = JOptionPane.showInputDialog("YOU LOSE!");
+  }
+  if(win == 0)
+      String tie = JOptionPane.showInputDialog("TIE!");
 }

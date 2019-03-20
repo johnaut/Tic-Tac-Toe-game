@@ -92,12 +92,14 @@ void mousePressed()
                 }
                 turns++;
                 filled++;
-                checkForWin();
+                if(filled>4)
+                  checkForWin();     
                 if(turns < 5 && win == 0){
                 computerMove();
                 filled++;
                 }
-                checkForWin();
+                if(filled>4)
+                  checkForWin();   
               }
           } 
         }

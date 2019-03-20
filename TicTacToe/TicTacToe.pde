@@ -64,6 +64,7 @@ void setup() {
 }
 
 void draw() {
+
   background(0);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
@@ -96,14 +97,11 @@ void mousePressed()
                 computerMove();
                 filled++;
                 }
-          
-         
+                checkForWin();
               }
           } 
         }
       }
-     
-      checkForWin();
       displayWinner();
      
     }
@@ -144,7 +142,7 @@ void displayWinner(){
   else if(player1 != win && win != 0)
       JOptionPane.showMessageDialog(null,"YOU LOSE!");
   if(filled == 9 && win == 0)
-      JOptionPane.showInputDialog(null,"TIE!");
+      JOptionPane.showMessageDialog(null,"TIE!");
       
 }
 

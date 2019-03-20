@@ -38,7 +38,7 @@ void checkForWin(){
 }
 
 void setup() {
-  size(500, 500);
+  size(600, 600);
 
   int w = width / cols;
   int h = height / rows;
@@ -64,13 +64,13 @@ void setup() {
 }
 
 void draw() {
-
   background(0);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
       board[i][j].display();
     }
   }
+  displayWinner();
 }
 
 
@@ -104,8 +104,6 @@ void mousePressed()
           } 
         }
       }
-      displayWinner();
-     
     }
   }
 }
@@ -138,13 +136,19 @@ void computerMove(){
 }
 
 void displayWinner(){
-  
+  fill(0);
+  textSize(100);
+  textAlign(CENTER);
+ 
   if(player1 == win)
-      JOptionPane.showMessageDialog(null,"YOU WIN!");
+    text("YOU WON!",width/2,height/2);
+      //JOptionPane.showMessageDialog(null,"YOU WIN!");
   else if(player1 != win && win != 0)
-      JOptionPane.showMessageDialog(null,"YOU LOSE!");
+    text("YOU LOST!",width/2,height/2);
+      //JOptionPane.showMessageDialog(null,"YOU LOSE!");
   if(filled == 9 && win == 0)
-      JOptionPane.showMessageDialog(null,"TIE!");
+    text("TIED!",width/2,height/2);
+      //JOptionPane.showMessageDialog(null,"TIE!");
       
 }
 

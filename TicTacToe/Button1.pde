@@ -20,12 +20,16 @@ class Button1 {
   }
   
    void display() {
-    stroke(0);
+    //stroke(5);
+    strokeWeight(3);
     fill(255);  
     rect(x, y, w, h);
-    fill(0);
+    if(label == 'X')
+      fill(255,0,0);
+    else
+      fill(0,0,255);
     textAlign(CENTER, CENTER);
-    textSize(50);
+    textSize(100);
     
     if(state==1){
     text(label, x + (w / 2), y + (h / 2));

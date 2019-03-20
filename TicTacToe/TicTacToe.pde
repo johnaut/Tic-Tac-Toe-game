@@ -37,8 +37,6 @@ void draw() {
       board[i][j].display();
     }
   }
-
-
 }
 
 void mousePressed()
@@ -52,25 +50,20 @@ void mousePressed()
                 if(player1 == 1){
                   board[i][j].state = 1;
                   board[i][j].label = 'X';
-              }else{
+                }else{
                 board[i][j].state = 1;
                 board[i][j].label = 'O';
+                }
+                  turns++;
+            }
           }
-          turns++;
         }
-      }
+      }   
+        if(turns < 5){
+          computerMove();
+        }
     }
-  }
-
-  if(turns < 5){
-     computerMove();
-  }
-
-
-
-
-}
-  }
+ }
 }
 
 

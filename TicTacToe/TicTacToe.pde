@@ -1,10 +1,8 @@
 import java.util.Random;
-import javax.swing.JOptionPane;
 Button1[][] board;
 
 int cols = 3;
 int rows = 3;
-int full = 9;
 int game = 1;
 int win = 0;
 int player1;
@@ -141,18 +139,9 @@ void displayWinner(){
   textAlign(CENTER);
  
   if(player1 == win)
-    text("YOU WON!",width/2,height/2);
-      //JOptionPane.showMessageDialog(null,"YOU WIN!");
+    text("YOU WON!",width/2,height/2-25);
   else if(player1 != win && win != 0)
-    text("YOU LOST!",width/2,height/2);
-      //JOptionPane.showMessageDialog(null,"YOU LOSE!");
+    text("YOU LOST!",width/2,height/2-25);
   if(filled == 9 && win == 0)
-    text("TIED!",width/2,height/2);
-      //JOptionPane.showMessageDialog(null,"TIE!");
-      
+    text("TIED!",width/2,height/2-25);      
 }
-
-/*if(board[i][j].isPressed() == true)
-{
-  ellipse(mouseX + board[i][j].Width/2, mouseY + board[i][j].Height/2, board[i][j].Width, board[i][j].Height);
-}*/

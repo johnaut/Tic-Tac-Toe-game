@@ -31,7 +31,7 @@ void checkForWin(){
   else if(board[diag][diag].label == 'O' && board[diag+1][diag+1].label == 'O' && board[diag+2][diag+2].label == 'O')
     win = 2;//Diag top left to bottom right O win
   else if(board[diag][diag+2].label == 'X' && board[diag+1][diag+1].label == 'X' && board[diag+2][0].label == 'X')
-    win = 2;//Diag top right to bottom left X win
+    win = 1;//Diag top right to bottom left X win
   else if(board[diag][diag+2].label == 'O' && board[diag+1][diag+1].label == 'O' && board[diag+2][0].label == 'O')
     win = 2;//Diag top right to bottom left O win  
   

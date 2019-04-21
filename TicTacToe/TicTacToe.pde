@@ -1,5 +1,9 @@
 import java.util.Random; //<>//
+import javax.swing.*;
+import processing.sound.*;
 
+
+SoundFile file;
 Button1[][] board;
 
 int cols = 3;
@@ -146,15 +150,15 @@ Button1 createFork(char marker){
 
 
 void setup() {
-  size(600, 600);
+  size(1200, 600);
 
-  int w = width / cols;
-  int h = height / rows;
+  int w = 600;
+  int h = 600;
 
   board = new Button1[cols][rows];
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      board[i][j] = new Button1(w * i, h * j, w, h);
+      board[i][j] = new Button1(w * i/3, h * j/3, w/3, h/3);
     }
   }
 
@@ -174,11 +178,11 @@ void setup() {
      computerMove();
      filled++;
    }
-
+   hint helper = new hint(playerMarker, board);
 }
 
 void draw() {
-  background(0);
+  background(255);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
       board[i][j].display();
@@ -196,25 +200,27 @@ void mousePressed()
         for(int j = 0; j < rows; j++){
           if(board[i][j].isInside(mouseX,mouseY)){
               if(board[i][j].isAvailable()){
-                if(playerMarker == 'X'){
-                  board[i][j].state = 1;
-                  board[i][j].label = playerMarker;
-
-                }else{
                 board[i][j].state = 1;
                 board[i][j].label = playerMarker;
-                }
                 turns++;
                 filled++;
+
                 if(filled>4)
                   checkForWin();
                 if(turns < 5 && win == 0){
-                computerMove();
-                filled++;
+                  computerMove();
+                  filled++;
                 }
                 if(filled>4)
                   checkForWin();
               }
+        else{
+        /**  int input = JOptionPane.showConfirmDialog(null,
+              "Invalid move.", "ALERT!", JOptionPane.DEFAULT_OPTION);
+              System.out.println(input);***/
+              file = new SoundFile(this, "buzzer.mp3");
+              file.play();
+        }
           }
         }
       }

@@ -38,18 +38,22 @@ class Button1 {
   }
   
    
-boolean isInside (float mx, float my) {
-   if (mx > x && mx < (x + w) && my > y && my < (y + h)) {
-      return true;
+  boolean isInside (float mx, float my) {
+     if (mx > x && mx < (x + w) && my > y && my < (y + h)) {
+        return true;
+      }
+      return false;
     }
-    return false;
+    
+  boolean isAvailable(){
+    boolean flag;
+    if(state == 1)
+      flag = false;
+    else
+      flag = true;
+      
+  return flag;
   }
-  
-boolean isAvailable(){
-  if(state == 1)
-    return false;
-return true;
-}
 }
   
   

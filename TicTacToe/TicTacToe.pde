@@ -1,4 +1,4 @@
-import java.util.Random;
+import java.util.Random; //<>//
 
 Button1[][] board;
 
@@ -103,6 +103,43 @@ Button1 stopFork(char marker){
 
 Button1 createFork(char marker){
   Button1 nextMove = board[0][0];
+  int cornerNum = 4;
+  Button1 corners [] = {board[0][0], board[0][2], board[2][0], board[2][2]}; 
+  if(compMarker == 'X'){
+    if(filled == 2){
+      if(board[0][0].label == marker && board[2][2].isAvailable()){
+        nextMove = board[2][2];
+        next = false;
+      }
+      else if(board[0][2].label == marker && board[2][0].isAvailable()){
+        nextMove = board[2][0];
+        next = false;
+      }
+      else if(board[2][0].label == marker && board[0][2].isAvailable()){
+        nextMove = board[0][2];
+        next = false;
+      }
+      else if(board[2][2].label == marker && board[0][0].isAvailable()){
+        nextMove = board[0][0];
+        next = false;
+      }
+      else{
+        for(int i = 0; i< cornerNum; i++){
+          if(corners[i].isAvailable()){
+            nextMove = corners[i];
+            next = false;
+            break;
+          }
+        }
+      }
+    }
+    /*else if(filled == 4){
+      if(                                     )
+      if(board[0][0].label == marker && board[2][2].label == marker){
+        if()
+      }
+    }*/
+  }
   
   return nextMove;
 }
@@ -193,6 +230,9 @@ void computerMove(){
   Button1 moveList[] = {board[1][1],board[0][0],board[2][0],board[0][2],board[2][2],board[1][0],board[0][1],board[2][1],board[1][2]};
   
   if(turns == 0){
+    int i = (Math.random() <= 0.5) ? 0 : 2;
+    int j = (Math.random() <= 0.5) ? 0 : 2;
+    move = board[i][j];
     move.state = 1;
     move.label = compMarker;
     return;
@@ -212,6 +252,13 @@ void computerMove(){
       return;
     }
     
+    move = createFork(compMarker);
+    if(next == false){
+      move.state = 1;
+      move.label = compMarker;
+      return;
+    }
+    
     move = stopFork(playerMarker);
     if(next == false){
       move.state = 1;
@@ -225,8 +272,6 @@ void computerMove(){
         move.state = 1;
         move.label = compMarker;
         next = false;
-        print(move.state);
-        print(move,"\n");
         return;
       }
     }  

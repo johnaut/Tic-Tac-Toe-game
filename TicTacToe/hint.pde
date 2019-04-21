@@ -55,17 +55,11 @@ class hint{
         for(int i = 0; i < 8; i=i+1){
           if(moveList[i].isAvailable() == true){
             move = moveList[i];
-            move.state = 1;
-            move.label = compMarker;
             next = false;
             return;
           }
         }
       }
     }
-
   }
-
-
-
 }

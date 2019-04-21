@@ -14,7 +14,6 @@ class Button1 {
     this.w = w;
     this.h = h;
     this.state = 0;
-
   }
 
    void display() {

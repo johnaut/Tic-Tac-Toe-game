@@ -158,7 +158,6 @@ void setup() {
     }
   }
 
-
    player1 = (Math.random() <= 0.5) ? 1 : 2;
    if(player1 == 1){
      print("you are X\n");

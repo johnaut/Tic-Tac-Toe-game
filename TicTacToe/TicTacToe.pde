@@ -135,14 +135,7 @@ void checkForWin(){
         }
       }
     }
-    /*else if(filled == 4){
-      if(                                     )
-      if(board[0][0].label == marker && board[2][2].label == marker){
-        if()
-      }
-    }*/
   }
-
   return nextMove;
 }
 
@@ -158,12 +151,10 @@ void setup() {
       board[i][j] = new Button1(w * i/3, h * j/3, w/3, h/3);
     }
   }
-
-
   assignMarker();
-
-   hint helper = new hint(playerMarker, board);
+  hint helper = new hint(playerMarker, board);
 }
+
 void assignMarker(){
   player1 = (Math.random() <= 0.5) ? 1 : 2;
   if(player1 == 1){
@@ -294,20 +285,15 @@ void displayWinner(){
   if(player1 == win){
     text("YOU WON!",width/2,height/2-25);
       gameOver = true;
-
   }
   else if(player1 != win && win != 0){
     text("YOU LOST!",width/2,height/2-25);
       gameOver = true;
-
   }
   if(filled == 9 && win == 0){
     text("TIED!",width/2,height/2-25);
       gameOver = true;
-
   }
-
-
 }
 
 void replay(){
@@ -318,18 +304,11 @@ void replay(){
     textAlign(CENTER);
     text("GAME OVER. Press space bar to resume.", width/2, height/2);
     if(keyPressed && key == ' '){  //user wants to resume
-      filled = 0;
-      turns = 0;
-      win = 0;
-
-      for(int i = 0; i < rows; i++){
-        for(int j = 0; j < cols; j++){
-          board[i][j].state = 0;
-          board[i][j].label = ' ';
-          gameOver = false;
-        }
-      }
-        assignMarker();
+        gameOver = false;
+        filled = 0;
+        turns = 0;
+        win = 0;
+        setup();
     }
   }
 }

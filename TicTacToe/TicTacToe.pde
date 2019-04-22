@@ -2,7 +2,6 @@ import java.util.Random; //<>//
 import javax.swing.*;
 import processing.sound.*;
 
-
 SoundFile file;
 Button1[][] board;
 
@@ -13,7 +12,7 @@ int win = 0;
 int player1;
 int filled = 0;
 int turns = 0;
-int gameOver = 0;
+boolean gameOver = false;
 char compMarker = ' ';
 char playerMarker = ' ';
 boolean next = true;
@@ -148,7 +147,6 @@ Button1 createFork(char marker){
   return nextMove;
 }
 
-
 void setup() {
   size(1200, 600);
 
@@ -218,6 +216,7 @@ void mousePressed()
         /**  int input = JOptionPane.showConfirmDialog(null,
               "Invalid move.", "ALERT!", JOptionPane.DEFAULT_OPTION);
               System.out.println(input);***/
+              /**Plays buzzer sound instead when clicking on a filled cell**/
               file = new SoundFile(this, "buzzer.mp3");
               file.play();
         }
@@ -288,10 +287,35 @@ void displayWinner(){
   textSize(100);
   textAlign(CENTER);
 
-  if(player1 == win)
+  if(player1 == win){
     text("YOU WON!",width/2,height/2-25);
-  else if(player1 != win && win != 0)
+      gameOver = true;
+      replay();
+  }
+  else if(player1 != win && win != 0){
     text("YOU LOST!",width/2,height/2-25);
-  if(filled == 9 && win == 0)
+      gameOver = true;
+      replay();
+  }
+  if(filled == 9 && win == 0){
     text("TIED!",width/2,height/2-25);
+      gameOver = true;
+      replay();
+  }
+}
+
+void replay(){
+  int reply = JOptionPane.showConfirmDialog(null,"Replay?", "GAME OVER",
+   JOptionPane.YES_NO_OPTION);
+  if (gameOver ==  true && reply == JOptionPane.YES_OPTION)
+   {
+      for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+          board[i][j].state = 0;
+          board[i][j].label = ' ';
+        }
+      }
+  } else {
+      System.exit(0);
+  }
 }

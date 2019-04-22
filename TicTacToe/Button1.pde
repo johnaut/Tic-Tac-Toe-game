@@ -31,9 +31,12 @@ class Button1 {
     if(state==1){
     text(label, x + (w / 2), y + (h / 2));
     }
-
   }
 
+  void displayHint() {
+    rect(x,y,w,h);
+    fill(75);
+  }
   boolean isInside (float mx, float my) {
      if (mx > x && mx < (x + w) && my > y && my < (y + h)) {
         return true;

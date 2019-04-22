@@ -5,7 +5,6 @@ class hint{
   boolean canWin = false;
   boolean canFork = false;
 
-  
   /**hint constructor is passed the marker of the player and
     the state of the board
   **/
@@ -25,9 +24,10 @@ class hint{
     Button1 moveList[] = {board[1][1],board[0][0],board[2][0]
       ,board[0][2],board[2][2],board[1][0],board[0][1],board[2][1],board[1][2]};
 
+      /**Highlight red for potential loss**/
         move = nextTurnWin(compMarker);
         if(next == false){
-        //  move.fill(51,255,51); //suggest this move
+          move.displayHint(); 
           return;
         }
 
@@ -38,12 +38,6 @@ class hint{
         }
 
         move = createFork(compMarker);
-        if(next == false){
-          //move.fill(51,255,51); //suggest this move
-          return;
-        }
-
-        move = stopFork(playerMarker);
         if(next == false){
           //move.fill(51,255,51); //suggest this move
           return;

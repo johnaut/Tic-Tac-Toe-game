@@ -1,4 +1,4 @@
-import java.util.Random; //<>//
+import java.util.Random;
 import javax.swing.*;
 import processing.sound.*;
 
@@ -7,7 +7,6 @@ Button1[][] board;
 
 int cols = 3;
 int rows = 3;
-int game = 1;
 int win = 0;
 int player1;
 int filled = 0;
@@ -43,7 +42,7 @@ void checkForWin(){
 
 }
 
-Button1 nextTurnWin(char marker){
+ Button1 nextTurnWin(char marker){
   Button1 nextMove = board[0][0];
 
   int j = 0;
@@ -93,7 +92,7 @@ Button1 nextTurnWin(char marker){
   return nextMove;
 }
 
-Button1 stopFork(char marker){
+ Button1 stopFork(char marker){
   Button1 nextMove = board[0][0];
   if(turns == 2){
     if(board[0][0].label == marker && board[2][2].label == marker || board[0][2].label == marker && board[2][0].label == marker){
@@ -104,7 +103,7 @@ Button1 stopFork(char marker){
   return nextMove;
 }
 
-Button1 createFork(char marker){
+ Button1 createFork(char marker){
   Button1 nextMove = board[0][0];
   int cornerNum = 4;
   Button1 corners [] = {board[0][0], board[0][2], board[2][0], board[2][2]};
@@ -160,25 +159,29 @@ void setup() {
     }
   }
 
-   player1 = (Math.random() <= 0.5) ? 1 : 2;
-   if(player1 == 1){
-     print("you are X\n");
-     playerMarker = 'X';
-     compMarker = 'O';
+
+  assignMarker();
+
+   hint helper = new hint(playerMarker, board);
+}
+void assignMarker(){
+  player1 = (Math.random() <= 0.5) ? 1 : 2;
+  if(player1 == 1){
+    print("you are X\n");
+    playerMarker = 'X';
+    compMarker = 'O';
+  }
+   else{
+     print("you are O\n");
+     playerMarker = 'O';
+     compMarker = 'X';
    }
-    else{
-      print("you are O\n");
-      playerMarker = 'O';
-      compMarker = 'X';
-    }
 
    if(player1 == 2){
      computerMove();
      filled++;
    }
-   hint helper = new hint(playerMarker, board);
 }
-
 void draw() {
   background(255);
   for(int i = 0; i < cols; i++){
@@ -187,12 +190,13 @@ void draw() {
     }
   }
   displayWinner();
+  replay();
 }
 
 
 void mousePressed()
 {
-  if(game == 1){
+
     if(win == 0){
       for(int i = 0; i < cols; i++){
         for(int j = 0; j < rows; j++){
@@ -203,7 +207,7 @@ void mousePressed()
                 turns++;
                 filled++;
 
-                if(filled>4)
+                if(filled > 4)
                   checkForWin();
                 if(turns < 5 && win == 0){
                   computerMove();
@@ -224,7 +228,7 @@ void mousePressed()
         }
       }
     }
-  }
+
 }
 
 
@@ -290,32 +294,42 @@ void displayWinner(){
   if(player1 == win){
     text("YOU WON!",width/2,height/2-25);
       gameOver = true;
-      replay();
+
   }
   else if(player1 != win && win != 0){
     text("YOU LOST!",width/2,height/2-25);
       gameOver = true;
-      replay();
+
   }
   if(filled == 9 && win == 0){
     text("TIED!",width/2,height/2-25);
       gameOver = true;
-      replay();
+
   }
+
+
 }
 
 void replay(){
-  int reply = JOptionPane.showConfirmDialog(null,"Replay?", "GAME OVER",
-   JOptionPane.YES_NO_OPTION);
-  if (gameOver ==  true && reply == JOptionPane.YES_OPTION)
-   {
+  if (gameOver ==  true)
+  {
+    fill(0);
+    textSize(30);
+    textAlign(CENTER);
+    text("GAME OVER. Press space bar to resume.", width/2, height/2);
+    if(keyPressed && key == ' '){  //user wants to resume
+      filled = 0;
+      turns = 0;
+      win = 0;
+
       for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
           board[i][j].state = 0;
           board[i][j].label = ' ';
+          gameOver = false;
         }
       }
-  } else {
-      System.exit(0);
+        assignMarker();
+    }
   }
 }

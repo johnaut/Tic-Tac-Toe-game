@@ -35,8 +35,9 @@ class Hint{
           return;
         }
       /**Highlight green for potential fork**/
-        move = createFork(compMarker);
+        move = createFork(playerMarker);
         if(next == false){
+          move.canFork = true;
           return;
         }
 

@@ -179,6 +179,7 @@ void draw() {
       board[i][j].display();
     }
   }
+  displayHint();
   displayWinner();
   replay();
 }
@@ -209,7 +210,7 @@ void mousePressed()
                 if(filled > 4)
                   checkForWin();
                 if(turns < 5 && win == 0){
-                  computerMove();
+                //  computerMove();
                   filled++;
 
                 }
@@ -219,6 +220,7 @@ void mousePressed()
         else{
               /**Plays buzzer sound when clicking on a filled cell**/
               file = new SoundFile(this, "buzzer.mp3");
+              System.out.print("Invalid Move");
               file.play();
         }
           }
@@ -296,6 +298,34 @@ void displayWinner(){
   if(filled == 9 && win == 0){
     text("TIED!",width/2,height/2-25);
       gameOver = true;
+  }
+}
+
+void displayHint(){
+  for(int i = 0; i < rows; i++){
+    for(int j = 0; j < cols; j++){
+      if(board[i][j].canBlock == true){
+        fill(0);
+        textSize(50);
+        textAlign(RIGHT);
+        text("BLOCK THIS MOVE!!",width/2,height/2-25);
+        board[i][j].canBlock = false;
+      }
+      else if(board[i][j].canWin == true){
+        fill(0);
+        textSize(50);
+        textAlign(RIGHT);
+        text("WIN!!",width/2,height/2-25);
+        board[i][j].canWin = false;
+      }
+      else if(board[i][j].canFork == true){
+        fill(0);
+        textSize(50);
+        textAlign(RIGHT);
+        text("BIG BRAIN MOVES!",width/2,height/2-25);
+        board[i][j].canFork = false;
+      }
+    }
   }
 }
 

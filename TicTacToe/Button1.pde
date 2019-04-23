@@ -1,11 +1,10 @@
 
 class Button1 {
-  float x;
-  float y;
-  float w;
-  float h;
+  float x,y,w,h;
   char label;
   int state = 0;
+  color c;
+  boolean canBlock, canWin, canFork = false;
 
   Button1(int x, int y, int w, int h)
   {
@@ -14,12 +13,13 @@ class Button1 {
     this.w = w;
     this.h = h;
     this.state = 0;
+    c = color(255,255,255);
   }
 
-   void display() {
+  void display() {
     //stroke(5);
     strokeWeight(3);
-    fill(255);
+    fill(c);
     rect(x, y, w, h);
     if(label == 'X')
       fill(255,0,0);
@@ -31,18 +31,23 @@ class Button1 {
     if(state==1){
     text(label, x + (w / 2), y + (h / 2));
     }
-  }
 
-  void displayHint() {
-    rect(x,y,w,h);
-    fill(75);
-  }
-  boolean isInside (float mx, float my) {
+   if(canBlock == true){
+     c = color(255,160,122); //light red to denote blocking losing move
+   }
+   if(canFork == true){
+     c = color(255,160,122); //light green to denote possible fork
+   }
+   if(canWin == true){
+     c = color(50,205,50); //light green to denote winning move
+   }
+}
+   boolean isInside (float mx, float my) {
      if (mx > x && mx < (x + w) && my > y && my < (y + h)) {
         return true;
       }
-      return false;
-    }
+        return false;
+  }
 
   boolean isAvailable(){
     boolean flag;

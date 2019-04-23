@@ -4,18 +4,14 @@ import processing.sound.*;
 
 SoundFile file;
 Button1[][] board;
-
+Hint helper;
 int cols = 3;
 int rows = 3;
-int win = 0;
-int player1;
-int filled = 0;
-int turns = 0;
+int win, filled, turns, player1;
 boolean gameOver = false;
 char compMarker = ' ';
 char playerMarker = ' ';
-boolean next = true;
-
+boolean next = true; //flag that makes computer check for next possible move
 
 void checkForWin(){
   int j = 0;
@@ -88,7 +84,6 @@ void checkForWin(){
     nextMove = board[diag+2][0];
     next = false;
   }
-
   return nextMove;
 }
 
@@ -141,6 +136,9 @@ void checkForWin(){
 
 void setup() {
   size(1200, 600);
+  filled = 0;
+  turns = 0;
+  win = 0;
 
   int w = 600;
   int h = 600;
@@ -152,7 +150,7 @@ void setup() {
     }
   }
   assignMarker();
-  hint helper = new hint(playerMarker, board);
+  helper = new Hint(playerMarker, board);
 }
 
 void assignMarker(){
@@ -162,18 +160,19 @@ void assignMarker(){
     playerMarker = 'X';
     compMarker = 'O';
   }
-   else{
+  else{
      print("you are O\n");
      playerMarker = 'O';
      compMarker = 'X';
    }
-
    if(player1 == 2){
      computerMove();
      filled++;
    }
 }
+
 void draw() {
+  mouseHover(mouseX, mouseY);
   background(255);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
@@ -184,10 +183,19 @@ void draw() {
   replay();
 }
 
+void mouseHover(int x, int y)
+{
+  for(int i = 0; i < cols; i++){
+    for(int j = 0; j < rows; j++){
+      if(board[i][j].isAvailable()){
+          helper.moveHint();
+      }
+    }
+  }
+}
 
 void mousePressed()
 {
-
     if(win == 0){
       for(int i = 0; i < cols; i++){
         for(int j = 0; j < rows; j++){
@@ -203,15 +211,13 @@ void mousePressed()
                 if(turns < 5 && win == 0){
                   computerMove();
                   filled++;
+
                 }
-                if(filled>4)
+                if(filled > 4)
                   checkForWin();
               }
         else{
-        /**  int input = JOptionPane.showConfirmDialog(null,
-              "Invalid move.", "ALERT!", JOptionPane.DEFAULT_OPTION);
-              System.out.println(input);***/
-              /**Plays buzzer sound instead when clicking on a filled cell**/
+              /**Plays buzzer sound when clicking on a filled cell**/
               file = new SoundFile(this, "buzzer.mp3");
               file.play();
         }
@@ -219,9 +225,7 @@ void mousePressed()
         }
       }
     }
-
 }
-
 
 void computerMove(){
   next = true;
@@ -236,7 +240,6 @@ void computerMove(){
     move.label = compMarker;
     return;
   }else{
-
     move = nextTurnWin(compMarker);
     if(next == false){
       move.state = 1;
@@ -305,9 +308,6 @@ void replay(){
     text("GAME OVER. Press space bar to resume.", width/2, height/2);
     if(keyPressed && key == ' '){  //user wants to resume
         gameOver = false;
-        filled = 0;
-        turns = 0;
-        win = 0;
         setup();
     }
   }

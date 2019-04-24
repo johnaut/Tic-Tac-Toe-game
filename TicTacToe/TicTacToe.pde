@@ -316,14 +316,41 @@ void displayWinner(){
   if(player1 == win){
     text("YOU WON!",900,200);
       gameOver = true;
+      for(int i = 0; i < rows; i++){
+        for(int j= 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
   }
   else if(player1 != win && win != 0){
     text("YOU LOST!",900,200);
       gameOver = true;
+      for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
   }
   if(filled == 9 && win == 0){
     text("TIED!",900,200);
       gameOver = true;
+      for(int i = 0 ; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
   }
 }
 

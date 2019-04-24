@@ -4,7 +4,7 @@ class Button1 {
   char label;
   int state = 0;
   color c;
-  boolean canBlock, canWin, canFork = false;
+  boolean canBlock, canWin, canFork, canBlockFork = false;
 
   Button1(int x, int y, int w, int h)
   {
@@ -35,12 +35,14 @@ class Button1 {
 
    if(canBlock == true && state == 0){
      c = color(255,160,122); //light red to denote blocking losing move
-   }
-   if(canFork == true && state == 0){
+   }else if(canFork == true && state == 0){
      c = color(50,205,50); //light green to denote possible fork
-   }
-   if(canWin == true && state == 0){
+   }else if(canWin == true && state == 0){
      c = color(50,205,50); //light green to denote winning move
+   }else if(canBlockFork == true && state == 0){
+     c = color(255,160,122); //light green to denote winning move
+   }else{
+     c = color(255);
    }
 }
    boolean isInside (float mx, float my) {

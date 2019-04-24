@@ -150,7 +150,7 @@ void setup() {
     }
   }
   assignMarker();
-  helper = new Hint(playerMarker, board);
+  helper = new Hint(playerMarker, board, turns);
 }
 
 void assignMarker(){
@@ -172,11 +172,14 @@ void assignMarker(){
 }
 
 void draw() {
-  mouseHover(mouseX, mouseY);
   background(255);
+  fill(0);
+  textSize(100);
+  text("Tic Tac Toe",900,25);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
       board[i][j].display();
+        mouseHover(mouseX, mouseY);
     }
   }
   displayWinner();
@@ -187,27 +190,25 @@ void mouseHover(int x, int y)
 {
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
-      if(board[i][j].isAvailable()){
+      if(board[i][j].isInside(x,y)){
+        if(!gameOver)
           helper.moveHint();
-        if(board[i][j].canBlock == true){
+        if(board[i][j].canBlock == true || board[i][j].canBlockFork == true ){
           fill(0);
           textSize(50);
-          textAlign(RIGHT);
-          text("BLOCK THIS MOVE!!",width/2,height/2-25);
+          text("BLOCK THIS MOVE!!",900,400);
           board[i][j].canBlock = false;
         }
         else if(board[i][j].canWin == true){
           fill(0);
           textSize(50);
-          textAlign(RIGHT);
-          text("WIN!!",width/2,height/2-25);
+          text("WIN!!",900,400);
           board[i][j].canWin = false;
         }
         else if(board[i][j].canFork == true){
           fill(0);
           textSize(50);
-          textAlign(RIGHT);
-          text("BIG BRAIN MOVES!",width/2,height/2-25);
+          text("BIG BRAIN MOVES!",900,400);
           board[i][j].canFork = false;
         }
       }
@@ -236,13 +237,20 @@ void mousePressed()
                 if(filled > 4)
                   checkForWin();
               }
+
         else{
-              /**Plays buzzer sound when clicking on a filled cell**/
+ /**Plays buzzer sound when clicking on a filled cell**/
               file = new SoundFile(this, "buzzer.mp3");
               System.out.print("Invalid Move");
               file.play();
         }
           }
+  /**This block of code reverts state of button after a mouse press**/
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
         }
       }
     }
@@ -304,18 +312,17 @@ void computerMove(){
 void displayWinner(){
   fill(0);
   textSize(100);
-  textAlign(CENTER);
 
   if(player1 == win){
-    text("YOU WON!",width/2,height/2-25);
+    text("YOU WON!",900,200);
       gameOver = true;
   }
   else if(player1 != win && win != 0){
-    text("YOU LOST!",width/2,height/2-25);
+    text("YOU LOST!",900,200);
       gameOver = true;
   }
   if(filled == 9 && win == 0){
-    text("TIED!",width/2,height/2-25);
+    text("TIED!",900,200);
       gameOver = true;
   }
 }
@@ -325,8 +332,8 @@ void replay(){
   {
     fill(0);
     textSize(30);
-    textAlign(CENTER);
-    text("GAME OVER. Press space bar to resume. q to quit", width/2, height/2);
+    text("GAME OVER", 900, 500);
+    text("Press space bar to resume. q to quit", 900, 550);
     if(keyPressed && key == ' '){  //user wants to resume
         gameOver = false;
         setup();

@@ -1,14 +1,16 @@
 class Hint{
   char label;
   Button1[][] board;
+  int turns;
 
   /**hint constructor is passed the marker of the player and
     the state of the board
   **/
 
-  Hint(char playerLabel, Button1[][] board){
+  Hint(char playerLabel, Button1[][] board, int turns){
     this.label = playerLabel;
     this.board = board;
+    this.turns = turns;
   }
 
   /**moveHint should act like computerMove, to simulate the computer
@@ -38,6 +40,12 @@ class Hint{
         move = createFork(playerMarker);
         if(next == false){
           move.canFork = true;
+          return;
+        }
+
+        move = stopFork(compMarker);
+        if(next == false){
+          move.canBlockFork = true;
           return;
         }
 

@@ -29,16 +29,17 @@ class Button1 {
     textSize(100);
 
     if(state==1){
-    text(label, x + (w / 2), y + (h / 2));
+      text(label, x + (w / 2), y + (h / 2));
+      c = color(255,255,255);
     }
 
-   if(canBlock == true){
+   if(canBlock == true && state == 0){
      c = color(255,160,122); //light red to denote blocking losing move
    }
-   if(canFork == true){
-     c = color(255,160,122); //light green to denote possible fork
+   if(canFork == true && state == 0){
+     c = color(50,205,50); //light green to denote possible fork
    }
-   if(canWin == true){
+   if(canWin == true && state == 0){
      c = color(50,205,50); //light green to denote winning move
    }
 }

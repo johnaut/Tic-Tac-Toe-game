@@ -102,7 +102,7 @@ void checkForWin(){
   Button1 nextMove = board[0][0];
   int cornerNum = 4;
   Button1 corners [] = {board[0][0], board[0][2], board[2][0], board[2][2]};
-  if(compMarker == 'X'){
+  if(compMarker == 'X' || playerMarker == 'X'){
     if(filled == 2){
       if(board[0][0].label == marker && board[2][2].isAvailable()){
         nextMove = board[2][2];
@@ -179,7 +179,7 @@ void draw() {
       board[i][j].display();
     }
   }
-  displayHint();
+//displayHint();
   displayWinner();
   replay();
 }
@@ -190,6 +190,27 @@ void mouseHover(int x, int y)
     for(int j = 0; j < rows; j++){
       if(board[i][j].isAvailable()){
           helper.moveHint();
+        if(board[i][j].canBlock == true){
+          fill(0);
+          textSize(50);
+          textAlign(RIGHT);
+          text("BLOCK THIS MOVE!!",width/2,height/2-25);
+          board[i][j].canBlock = false;
+        }
+        else if(board[i][j].canWin == true){
+          fill(0);
+          textSize(50);
+          textAlign(RIGHT);
+          text("WIN!!",width/2,height/2-25);
+          board[i][j].canWin = false;
+        }
+        else if(board[i][j].canFork == true){
+          fill(0);
+          textSize(50);
+          textAlign(RIGHT);
+          text("BIG BRAIN MOVES!",width/2,height/2-25);
+          board[i][j].canFork = false;
+        }
       }
     }
   }
@@ -210,9 +231,8 @@ void mousePressed()
                 if(filled > 4)
                   checkForWin();
                 if(turns < 5 && win == 0){
-                //  computerMove();
+                  computerMove();  /*Disable this method call to test hint win/fork use cases*/
                   filled++;
-
                 }
                 if(filled > 4)
                   checkForWin();
@@ -304,27 +324,7 @@ void displayWinner(){
 void displayHint(){
   for(int i = 0; i < rows; i++){
     for(int j = 0; j < cols; j++){
-      if(board[i][j].canBlock == true){
-        fill(0);
-        textSize(50);
-        textAlign(RIGHT);
-        text("BLOCK THIS MOVE!!",width/2,height/2-25);
-        board[i][j].canBlock = false;
-      }
-      else if(board[i][j].canWin == true){
-        fill(0);
-        textSize(50);
-        textAlign(RIGHT);
-        text("WIN!!",width/2,height/2-25);
-        board[i][j].canWin = false;
-      }
-      else if(board[i][j].canFork == true){
-        fill(0);
-        textSize(50);
-        textAlign(RIGHT);
-        text("BIG BRAIN MOVES!",width/2,height/2-25);
-        board[i][j].canFork = false;
-      }
+
     }
   }
 }

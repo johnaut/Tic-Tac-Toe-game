@@ -179,7 +179,6 @@ void draw() {
       board[i][j].display();
     }
   }
-//displayHint();
   displayWinner();
   replay();
 }
@@ -321,24 +320,19 @@ void displayWinner(){
   }
 }
 
-void displayHint(){
-  for(int i = 0; i < rows; i++){
-    for(int j = 0; j < cols; j++){
-
-    }
-  }
-}
-
 void replay(){
   if (gameOver ==  true)
   {
     fill(0);
     textSize(30);
     textAlign(CENTER);
-    text("GAME OVER. Press space bar to resume.", width/2, height/2);
+    text("GAME OVER. Press space bar to resume. q to quit", width/2, height/2);
     if(keyPressed && key == ' '){  //user wants to resume
         gameOver = false;
         setup();
+    }
+    if(keyPressed && key == 'q'){
+      System.exit(0);
     }
   }
 }

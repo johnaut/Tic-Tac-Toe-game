@@ -1,3 +1,10 @@
+/**
+*Tic-Tac-Toe (2nd Prototype)
+*Authors: John Autencio, Tony Gonzalez, Bar Rakovsky, Antonio Sanchez
+*4-24-19
+*
+**/
+
 import java.util.Random;
 import javax.swing.*;
 import processing.sound.*;

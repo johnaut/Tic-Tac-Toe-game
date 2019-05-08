@@ -1,12 +1,12 @@
 
-class Button1 {
+class Cell {
   float x,y,w,h;
   char label;
   int state = 0;
   color c;
   boolean canBlock, canWin, canFork, canBlockFork = false;
 
-  Button1(int x, int y, int w, int h)
+  Cell(int x, int y, int w, int h)
   {
     this.x = x;
     this.y = y;
@@ -17,7 +17,6 @@ class Button1 {
   }
 
   void display() {
-    //stroke(5);
     strokeWeight(3);
     fill(c);
     rect(x, y, w, h);
@@ -58,7 +57,6 @@ class Button1 {
       flag = false;
     else
       flag = true;
-
-  return flag;
+      return flag;
   }
 }

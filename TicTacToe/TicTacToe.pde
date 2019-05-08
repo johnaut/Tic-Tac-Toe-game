@@ -1,6 +1,7 @@
 import java.util.Random;
 import javax.swing.*;
 import processing.sound.*;
+import java.util.Stack;
 
 SoundFile file;
 Button1[][] board;
@@ -12,6 +13,12 @@ boolean gameOver = false;
 char compMarker = ' ';
 char playerMarker = ' ';
 boolean next = true; //flag that makes computer check for next possible move
+
+
+boolean z_pressed = false;
+boolean ctrl_pressed = false;
+
+Stack<Button1> moves = new Stack<Button1>();
 
 void checkForWin(){
   int j = 0;
@@ -156,7 +163,7 @@ void setup() {
 void assignMarker(){
   player1 = (Math.random() <= 0.5) ? 1 : 2;
   if(player1 == 1){
-    print("you are X\n");
+    print("you are X. Make the first move\n");
     playerMarker = 'X';
     compMarker = 'O';
   }
@@ -199,6 +206,7 @@ void mouseHover(int x, int y)
           text("BLOCK THIS MOVE!!",900,400);
           board[i][j].canBlock = false;
         }
+
         else if(board[i][j].canWin == true){
           fill(0);
           textSize(50);
@@ -223,6 +231,7 @@ void mousePressed()
         for(int j = 0; j < rows; j++){
           if(board[i][j].isInside(mouseX,mouseY)){
               if(board[i][j].isAvailable()){
+                moves.push(board[i][j]);
                 board[i][j].state = 1;
                 board[i][j].label = playerMarker;
                 turns++;
@@ -267,12 +276,15 @@ void computerMove(){
     move = board[i][j];
     move.state = 1;
     move.label = compMarker;
+    moves.push(move);
     return;
   }else{
     move = nextTurnWin(compMarker);
     if(next == false){
       move.state = 1;
       move.label = compMarker;
+      moves.push(move);
+
       return;
     }
 
@@ -280,6 +292,8 @@ void computerMove(){
     if(next == false){
       move.state = 1;
       move.label = compMarker;
+      moves.push(move);
+
       return;
     }
 
@@ -287,6 +301,8 @@ void computerMove(){
     if(next == false){
       move.state = 1;
       move.label = compMarker;
+      moves.push(move);
+
       return;
     }
 
@@ -294,6 +310,8 @@ void computerMove(){
     if(next == false){
       move.state = 1;
       move.label = compMarker;
+      moves.push(move);
+
       return;
     }
 
@@ -302,6 +320,8 @@ void computerMove(){
         move = moveList[i];
         move.state = 1;
         move.label = compMarker;
+        moves.push(move);
+
         next = false;
         return;
       }
@@ -325,12 +345,15 @@ void displayWinner(){
           board[i][j].c = color(255);
         }
       }
+      textSize(75);
+
+      text("Turns made:" + turns, 900, 300);
   }
   else if(player1 != win && win != 0){
     text("YOU LOST!",900,200);
       gameOver = true;
       for(int i = 0; i < rows; i++){
-        for(int j = 0; j < cols; j++){
+    for(int j = 0; j < cols; j++){
           board[i][j].canWin = false;
           board[i][j].canBlock = false;
           board[i][j].canFork = false;
@@ -338,7 +361,12 @@ void displayWinner(){
           board[i][j].c = color(255);
         }
       }
+      textSize(75);
+
+      text("Turns made:" + turns, 900, 300);
+
   }
+
   if(filled == 9 && win == 0){
     text("TIED!",900,200);
       gameOver = true;
@@ -352,6 +380,9 @@ void displayWinner(){
         }
       }
   }
+  textSize(75);
+  text("Turns made:" + turns, 900, 300);
+
 }
 
 void replay(){
@@ -369,4 +400,57 @@ void replay(){
       System.exit(0);
     }
   }
+}
+
+void keyPressed(){
+  if(keyCode == 17){
+    ctrl_pressed = true;
+  }
+
+  if(keyCode == 90){
+    z_pressed = true;
+  }
+
+  if(ctrl_pressed && z_pressed){
+    undoMove();
+  }
+
+}
+
+void keyReleased(){
+  if(keyCode == 17){
+    ctrl_pressed = false;
+  }
+
+  if(keyCode == 90){
+    z_pressed = false;
+  }
+}
+
+void undoMove(){
+   if((moves.size() == 1 && moves.peek().label == compMarker) || moves.isEmpty() || gameOver == true){
+     SoundFile file2 = new SoundFile(this, "buzzer.mp3");
+              System.out.print("Invalid Move");
+              file2.play();
+
+   }
+   else if(moves.size() > 1){
+     for(int i = 0; i < 2; i ++){
+      Button1 delete_move = moves.peek();
+      if(delete_move.label == playerMarker){
+        turns = turns - 1;
+      }
+      delete_move.label = ' ';
+      delete_move.state = 0;
+      filled = filled -1;
+      moves.pop();
+     }
+   }
+   /*else{
+    SoundFile file2 = new SoundFile(this, "buzzer.mp3");
+              System.out.print("Invalid Move");
+              file2.play();
+
+   }*/
+
 }

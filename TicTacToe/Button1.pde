@@ -27,8 +27,11 @@ class Button1 {
       fill(0,0,255);
     textAlign(CENTER, CENTER);
     textSize(100);
-
-    if(state==1){
+    
+    if(state == 0){
+      text(' ',x + (w / 2), y + (h / 2));
+    }
+    else if(state==1){
       text(label, x + (w / 2), y + (h / 2));
       c = color(255,255,255);
     }

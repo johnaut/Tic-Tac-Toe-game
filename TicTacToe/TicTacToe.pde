@@ -1,19 +1,17 @@
-import java.util.Random; //<>//
+import java.util.Random;
+import javax.swing.*;
+import processing.sound.*;
 
+SoundFile file;
 Button1[][] board;
-
+Hint helper;
 int cols = 3;
 int rows = 3;
-int game = 1;
-int win = 0;
-int player1;
-int filled = 0;
-int turns = 0;
-int gameOver = 0;
+int win, filled, turns, player1;
+boolean gameOver = false;
 char compMarker = ' ';
 char playerMarker = ' ';
-boolean next = true;
-
+boolean next = true; //flag that makes computer check for next possible move
 
 void checkForWin(){
   int j = 0;
@@ -40,7 +38,7 @@ void checkForWin(){
 
 }
 
-Button1 nextTurnWin(char marker){
+ Button1 nextTurnWin(char marker){
   Button1 nextMove = board[0][0];
 
   int j = 0;
@@ -86,11 +84,10 @@ Button1 nextTurnWin(char marker){
     nextMove = board[diag+2][0];
     next = false;
   }
-
   return nextMove;
 }
 
-Button1 stopFork(char marker){
+ Button1 stopFork(char marker){
   Button1 nextMove = board[0][0];
   if(turns == 2){
     if(board[0][0].label == marker && board[2][2].label == marker || board[0][2].label == marker && board[2][0].label == marker){
@@ -101,11 +98,11 @@ Button1 stopFork(char marker){
   return nextMove;
 }
 
-Button1 createFork(char marker){
+ Button1 createFork(char marker){
   Button1 nextMove = board[0][0];
   int cornerNum = 4;
   Button1 corners [] = {board[0][0], board[0][2], board[2][0], board[2][2]};
-  if(compMarker == 'X'){
+  if(compMarker == 'X' || playerMarker == 'X'){
     if(filled == 2){
       if(board[0][0].label == marker && board[2][2].isAvailable()){
         nextMove = board[2][2];
@@ -133,95 +130,131 @@ Button1 createFork(char marker){
         }
       }
     }
-    /*else if(filled == 4){
-      if(                                     )
-      if(board[0][0].label == marker && board[2][2].label == marker){
-        if()
-      }
-    }*/
   }
-
   return nextMove;
 }
 
-
 void setup() {
   size(1200, 600);
+  filled = 0;
+  turns = 0;
+  win = 0;
+
   int w = 600;
   int h = 600;
 
   board = new Button1[cols][rows];
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      board[i][j] = new Button1(w/3 * i, h/3 * j, w/3, h/3);
+      board[i][j] = new Button1(w * i/3, h * j/3, w/3, h/3);
     }
   }
+  assignMarker();
+  helper = new Hint(playerMarker, board, turns);
+}
 
-
-   player1 = (Math.random() <= 0.5) ? 1 : 2;
-   if(player1 == 1){
-     print("you are X\n");
-     playerMarker = 'X';
-     compMarker = 'O';
+void assignMarker(){
+  player1 = (Math.random() <= 0.5) ? 1 : 2;
+  if(player1 == 1){
+    print("you are X\n");
+    playerMarker = 'X';
+    compMarker = 'O';
+  }
+  else{
+     print("you are O\n");
+     playerMarker = 'O';
+     compMarker = 'X';
    }
-    else{
-      print("you are O\n");
-      playerMarker = 'O';
-      compMarker = 'X';
-    }
-
    if(player1 == 2){
      computerMove();
      filled++;
    }
-    //<>//
 }
 
 void draw() {
   background(255);
+  fill(0);
+  textSize(100);
+  text("Tic Tac Toe",900,25);
   for(int i = 0; i < cols; i++){
     for(int j = 0; j < rows; j++){
       board[i][j].display();
+        mouseHover(mouseX, mouseY);
     }
   }
   displayWinner();
+  replay();
 }
 
-
-void mousePressed()
+void mouseHover(int x, int y)
 {
-  if(game == 1){
-    if(win == 0){
-      for(int i = 0; i < cols; i++){
-        for(int j = 0; j < rows; j++){
-          if(board[i][j].isInside(mouseX,mouseY)){
-              if(board[i][j].isAvailable()){
-                if(playerMarker == 'X'){
-                  board[i][j].state = 1;
-                  board[i][j].label = playerMarker;
-
-                }else{
-                board[i][j].state = 1;
-                board[i][j].label = playerMarker;
-                }
-                turns++;
-                filled++;
-                if(filled>4)
-                  checkForWin();
-                if(turns < 5 && win == 0){
-                computerMove();
-                filled++;
-                }
-                if(filled>4)
-                  checkForWin();
-              }
-          }
+  for(int i = 0; i < cols; i++){
+    for(int j = 0; j < rows; j++){
+      if(board[i][j].isInside(x,y)){
+        if(!gameOver)
+          helper.moveHint();
+        if(board[i][j].canBlock == true || board[i][j].canBlockFork == true ){
+          fill(0);
+          textSize(50);
+          text("BLOCK THIS MOVE!!",900,400);
+          board[i][j].canBlock = false;
+        }
+        else if(board[i][j].canWin == true){
+          fill(0);
+          textSize(50);
+          text("WIN!!",900,400);
+          board[i][j].canWin = false;
+        }
+        else if(board[i][j].canFork == true){
+          fill(0);
+          textSize(50);
+          text("BIG BRAIN MOVES!",900,400);
+          board[i][j].canFork = false;
         }
       }
     }
   }
 }
 
+void mousePressed()
+{
+    if(win == 0){
+      for(int i = 0; i < cols; i++){
+        for(int j = 0; j < rows; j++){
+          if(board[i][j].isInside(mouseX,mouseY)){
+              if(board[i][j].isAvailable()){
+                board[i][j].state = 1;
+                board[i][j].label = playerMarker;
+                turns++;
+                filled++;
+
+                if(filled > 4)
+                  checkForWin();
+                if(turns < 5 && win == 0){
+                  computerMove();  /*Disable this method call to test hint win/fork use cases*/
+                  filled++;
+                }
+                if(filled > 4)
+                  checkForWin();
+              }
+
+        else{
+ /**Plays buzzer sound when clicking on a filled cell**/
+              file = new SoundFile(this, "buzzer.mp3");
+              System.out.print("Invalid Move");
+              file.play();
+        }
+          }
+  /**This block of code reverts state of button after a mouse press**/
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
+    }
+}
 
 void computerMove(){
   next = true;
@@ -236,7 +269,6 @@ void computerMove(){
     move.label = compMarker;
     return;
   }else{
-
     move = nextTurnWin(compMarker);
     if(next == false){
       move.state = 1;
@@ -280,12 +312,61 @@ void computerMove(){
 void displayWinner(){
   fill(0);
   textSize(100);
-  textAlign(CENTER);
 
-  if(player1 == win)
-    text("YOU WON!",width/2,height/2-25);
-  else if(player1 != win && win != 0)
-    text("YOU LOST!",width/2,height/2-25);
-  if(filled == 9 && win == 0)
-    text("TIED!",width/2,height/2-25);
+  if(player1 == win){
+    text("YOU WON!",900,200);
+      gameOver = true;
+      for(int i = 0; i < rows; i++){
+        for(int j= 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
+  }
+  else if(player1 != win && win != 0){
+    text("YOU LOST!",900,200);
+      gameOver = true;
+      for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
+  }
+  if(filled == 9 && win == 0){
+    text("TIED!",900,200);
+      gameOver = true;
+      for(int i = 0 ; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+          board[i][j].canWin = false;
+          board[i][j].canBlock = false;
+          board[i][j].canFork = false;
+          board[i][j].canBlockFork = false;
+          board[i][j].c = color(255);
+        }
+      }
+  }
+}
+
+void replay(){
+  if (gameOver ==  true)
+  {
+    fill(0);
+    textSize(30);
+    text("GAME OVER", 900, 500);
+    text("Press space bar to resume. q to quit", 900, 550);
+    if(keyPressed && key == ' '){  //user wants to resume
+        gameOver = false;
+        setup();
+    }
+    if(keyPressed && key == 'q'){
+      System.exit(0);
+    }
+  }
 }

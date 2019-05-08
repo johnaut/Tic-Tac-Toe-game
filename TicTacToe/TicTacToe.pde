@@ -191,20 +191,6 @@ void draw() {
   displayWinner();
   replay();
   
-  print(win + "\n");
-  
-  /*if(ctrl_pressed && z_pressed){
-   if(!moves.isEmpty()){
-      Button1 delete_move = moves.peek();
-      delete_move.label = ' ';
-      delete_move.state = 0;
-      moves.pop();
-   }else{
-    SoundFile file2 = new SoundFile(this, "buzzer.mp3");
-              System.out.print("Invalid Move");
-              file2.play();
-   }
-  }*/
 }
 
 void mouseHover(int x, int y)
@@ -426,19 +412,30 @@ void keyReleased(){
 
 void undoMove(){
   
- for(int i = 0; i < 2 ; i++){
-   if(!moves.isEmpty()){
+ 
+   if((moves.size() == 1 && moves.peek().label == compMarker) || moves.isEmpty() || gameOver == true){
+     SoundFile file2 = new SoundFile(this, "buzzer.mp3");
+              System.out.print("Invalid Move");
+              file2.play();
+               
+   }
+   else if(moves.size() > 1){
+     for(int i = 0; i < 2; i ++){
       Button1 delete_move = moves.peek();
+      if(delete_move.label == playerMarker){
+        turns = turns - 1;
+      }
       delete_move.label = ' ';
       delete_move.state = 0;
-      filled = filled -1;
-      turns= turns - 1;
+      filled = filled -1;    
       moves.pop();
-   }else{
+     }
+   }
+   /*else{
     SoundFile file2 = new SoundFile(this, "buzzer.mp3");
               System.out.print("Invalid Move");
               file2.play();
-              i = 2; 
-   }
- }
+               
+   }*/
+ 
 }

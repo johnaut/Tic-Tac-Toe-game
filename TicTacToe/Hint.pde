@@ -1,3 +1,6 @@
+/**
+* Represents the hint that can be displayed for the User.
+*/
 class Hint{
   char label;
   Button1[][] board;

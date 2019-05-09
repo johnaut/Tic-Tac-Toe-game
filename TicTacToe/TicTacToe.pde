@@ -8,18 +8,22 @@ Button1[][] board;
 Hint helper;
 int cols = 3;
 int rows = 3;
-int win, filled, turns, player1;
+int win, filled, turns, player1, totalWins, totalLosses, totalTies;
 boolean gameOver = false;
 char compMarker = ' ';
 char playerMarker = ' ';
 boolean next = true; //flag that makes computer check for next possible move
-
 
 boolean z_pressed = false;
 boolean ctrl_pressed = false;
 
 Stack<Button1> moves = new Stack<Button1>();
 
+
+/**
+* checks for a 3 in a row scenario for either marker. 
+*
+*/
 void checkForWin(){
   int j = 0;
 
@@ -43,8 +47,23 @@ void checkForWin(){
   else if(board[diag][diag+2].label == 'O' && board[diag+1][diag+1].label == 'O' && board[diag+2][0].label == 'O')
     win = 2;//Diag top right to bottom left O win
 
+    if(player1 == win){
+        totalWins++;
+    }
+    else if(player1 != win && win != 0){
+        totalLosses++;
+    }
+    if(filled == 9 && win == 0){
+        totalTies++;
+    }
 }
 
+/**
+* The button that has the chance for the player to win will be the button that
+* is returned to the computer. The computer uses this button to make their move
+* @return a button
+* @param marker
+**/
  Button1 nextTurnWin(char marker){
   Button1 nextMove = board[0][0];
 
@@ -93,7 +112,12 @@ void checkForWin(){
   }
   return nextMove;
 }
-
+/**
+* The button that has the chance for the player to stop a fork will be the button that
+* is returned to the computer. The computer uses this button to make their move
+* @return a button
+* @param marker
+**/
  Button1 stopFork(char marker){
   Button1 nextMove = board[0][0];
   if(turns == 2){
@@ -104,7 +128,12 @@ void checkForWin(){
   }
   return nextMove;
 }
-
+/**
+* The button that has the chance for the player to create a fork will be the button that
+* is returned to the computer. The computer uses this button to make their move
+* @return a button
+* @param marker
+**/
  Button1 createFork(char marker){
   Button1 nextMove = board[0][0];
   int cornerNum = 4;
@@ -142,7 +171,7 @@ void checkForWin(){
 }
 
 void setup() {
-  size(1200, 600);
+  size(1200, 800);
   filled = 0;
   turns = 0;
   win = 0;
@@ -160,9 +189,16 @@ void setup() {
   helper = new Hint(playerMarker, board, turns);
 }
 
+/**
+* Assigns a marker to the player to start the game. The player assigned X goes first
+**/
 void assignMarker(){
   player1 = (Math.random() <= 0.5) ? 1 : 2;
   if(player1 == 1){
+
+    textSize(50);
+    text("You are X",900,200);
+
     print("you are X. Make the first move\n");
     playerMarker = 'X';
     compMarker = 'O';
@@ -193,6 +229,11 @@ void draw() {
   replay();
 }
 
+/*
+*
+*displays hints and deletes them once the mouse hovers over the button
+*@param x, y Coordinates of the mouse
+*/
 void mouseHover(int x, int y)
 {
   for(int i = 0; i < cols; i++){
@@ -203,20 +244,20 @@ void mouseHover(int x, int y)
         if(board[i][j].canBlock == true || board[i][j].canBlockFork == true ){
           fill(0);
           textSize(50);
-          text("BLOCK THIS MOVE!!",900,400);
+          text("BLOCK THIS MOVE!!",900,200);
           board[i][j].canBlock = false;
         }
 
         else if(board[i][j].canWin == true){
           fill(0);
           textSize(50);
-          text("WIN!!",900,400);
+          text("WIN!!",900,200);
           board[i][j].canWin = false;
         }
         else if(board[i][j].canFork == true){
           fill(0);
           textSize(50);
-          text("BIG BRAIN MOVES!",900,400);
+          text("BIG BRAIN MOVES!",900,200);
           board[i][j].canFork = false;
         }
       }
@@ -224,6 +265,10 @@ void mouseHover(int x, int y)
   }
 }
 
+/*Actions that need to be made when a User presses a button
+* Hints disappear after a move has been made  by the player
+* Variables/States of a specific game "Button" are altered
+*/
 void mousePressed()
 {
     if(win == 0){
@@ -242,12 +287,10 @@ void mousePressed()
                 if(turns < 5 && win == 0){
                   computerMove();  /*Disable this method call to test hint win/fork use cases*/
                   filled++;
-                }
-                if(filled > 4)
                   checkForWin();
-              }
-
-        else{
+                }
+          }
+         else{
  /**Plays buzzer sound when clicking on a filled cell**/
               file = new SoundFile(this, "buzzer.mp3");
               System.out.print("Invalid Move");
@@ -265,6 +308,11 @@ void mousePressed()
     }
 }
 
+
+/*The logic of the computer is written here
+* The moves stack pushes buttons that have last been altered
+*
+*/
 void computerMove(){
   next = true;
   Button1 move = board[0][0];
@@ -284,7 +332,6 @@ void computerMove(){
       move.state = 1;
       move.label = compMarker;
       moves.push(move);
-
       return;
     }
 
@@ -293,7 +340,6 @@ void computerMove(){
       move.state = 1;
       move.label = compMarker;
       moves.push(move);
-
       return;
     }
 
@@ -302,7 +348,6 @@ void computerMove(){
       move.state = 1;
       move.label = compMarker;
       moves.push(move);
-
       return;
     }
 
@@ -311,7 +356,6 @@ void computerMove(){
       move.state = 1;
       move.label = compMarker;
       moves.push(move);
-
       return;
     }
 
@@ -321,7 +365,6 @@ void computerMove(){
         move.state = 1;
         move.label = compMarker;
         moves.push(move);
-
         next = false;
         return;
       }
@@ -329,6 +372,11 @@ void computerMove(){
   }
 }
 
+
+/*Displays the results of the game
+* Resets the variables of each button in the board
+*
+*/
 void displayWinner(){
   fill(0);
   textSize(100);
@@ -345,15 +393,13 @@ void displayWinner(){
           board[i][j].c = color(255);
         }
       }
-      textSize(75);
 
-      text("Turns made:" + turns, 900, 300);
   }
   else if(player1 != win && win != 0){
     text("YOU LOST!",900,200);
       gameOver = true;
       for(int i = 0; i < rows; i++){
-    for(int j = 0; j < cols; j++){
+       for(int j = 0; j < cols; j++){
           board[i][j].canWin = false;
           board[i][j].canBlock = false;
           board[i][j].canFork = false;
@@ -361,37 +407,41 @@ void displayWinner(){
           board[i][j].c = color(255);
         }
       }
-      textSize(75);
-
-      text("Turns made:" + turns, 900, 300);
-
   }
 
   if(filled == 9 && win == 0){
     text("TIED!",900,200);
       gameOver = true;
-      for(int i = 0 ; i < rows; i++){
-        for(int j = 0; j < cols; j++){
+    for(int i = 0 ; i < rows; i++){
+       for(int j = 0; j < cols; j++){
           board[i][j].canWin = false;
           board[i][j].canBlock = false;
           board[i][j].canFork = false;
           board[i][j].canBlockFork = false;
           board[i][j].c = color(255);
-        }
-      }
+       }
+    }
   }
+
   textSize(75);
   text("Turns made:" + turns, 900, 300);
+  textSize(25);
+  text("Wins:" + totalWins, 900, 400);
+  textSize(25);
+  text("Losses: " + totalLosses, 900, 450);
+  textSize(25);
+  text("Ties: " + totalTies, 900, 500);
 
 }
 
+/*Prompts the user to press a key to restart or quit the game*/
 void replay(){
   if (gameOver ==  true)
   {
     fill(0);
     textSize(30);
-    text("GAME OVER", 900, 500);
-    text("Press space bar to resume. q to quit", 900, 550);
+    text("GAME OVER", 900, 600);
+    text("Press space bar to resume. q to quit", 900, 650);
     if(keyPressed && key == ' '){  //user wants to resume
         gameOver = false;
         setup();
@@ -402,35 +452,34 @@ void replay(){
   }
 }
 
+/*Calls undoMove when the ctrl key and z key have been pressed*/
 void keyPressed(){
   if(keyCode == 17){
     ctrl_pressed = true;
   }
-
   if(keyCode == 90){
     z_pressed = true;
   }
-
   if(ctrl_pressed && z_pressed){
     undoMove();
   }
-
 }
 
+/*Sets conditions back to false when the keys are released*/
 void keyReleased(){
   if(keyCode == 17){
     ctrl_pressed = false;
   }
-
   if(keyCode == 90){
     z_pressed = false;
   }
 }
 
+/*Reverts the board back to last move made: Pops the button out of the stack once the undo is complete*/
 void undoMove(){
    if((moves.size() == 1 && moves.peek().label == compMarker) || moves.isEmpty() || gameOver == true){
      SoundFile file2 = new SoundFile(this, "buzzer.mp3");
-              System.out.print("Invalid Move");
+              System.out.println("Invalid Move");
               file2.play();
 
    }
@@ -442,8 +491,13 @@ void undoMove(){
       }
       delete_move.label = ' ';
       delete_move.state = 0;
+      delete_move.canWin = false;
+      delete_move.canBlock = false;
+      delete_move.canFork = false;
+      delete_move.canBlockFork = false;
       filled = filled -1;
       moves.pop();
+
      }
    }
    /*else{

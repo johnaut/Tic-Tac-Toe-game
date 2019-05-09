@@ -21,7 +21,7 @@ Stack<Button1> moves = new Stack<Button1>();
 
 
 /**
-* checks for a 3 in a row scenario for either marker. 
+* checks for a 3 in a row scenario for either marker.
 *
 */
 void checkForWin(){
@@ -481,13 +481,13 @@ void undoMove(){
      SoundFile file2 = new SoundFile(this, "buzzer.mp3");
               System.out.println("Invalid Move");
               file2.play();
-
    }
    else if(moves.size() > 1){
      for(int i = 0; i < 2; i ++){
       Button1 delete_move = moves.peek();
-      if(delete_move.label == playerMarker){
+      if(delete_move.label == playerMarker && turns != 0){
         turns = turns - 1;
+
       }
       delete_move.label = ' ';
       delete_move.state = 0;
@@ -497,7 +497,6 @@ void undoMove(){
       delete_move.canBlockFork = false;
       filled = filled -1;
       moves.pop();
-
      }
    }
    /*else{

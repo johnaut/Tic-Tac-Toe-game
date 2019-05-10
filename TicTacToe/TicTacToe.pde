@@ -175,6 +175,7 @@ void setup() {
   filled = 0;
   turns = 0;
   win = 0;
+  moves.clear(); 
 
   int w = 600;
   int h = 600;
